@@ -20,6 +20,7 @@ class UserController extends Controller
     public function index()
     {
         try {
+            auth()->user()->id
             $data = User::where('id', '<>', Auth::id())->get();
             return response()->json([
                 'message' => 'Lista de usuarios',

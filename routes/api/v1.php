@@ -21,18 +21,18 @@ use Illuminate\Support\Facades\Route;
 Route::name("api.v1")->group(function () {
 
 	// Authentication
-	// Route::prefix("auth")->namespace("Auth")->group(function () {
+	Route::prefix("auth")->namespace("Auth")->group(function () {
 	// 	Route::post('login', 'AuthController@login');
 	// 	Route::post('logout', 'AuthController@logout')->middleware(["auth:api"]);
 
-	// });
+	});
     // User
     Route::prefix("users")->group(function () {
         Route::get("/", "UserController@index");
-        // Route::post("/store", "UserController@store");
-        // Route::get("/{user}", "UserController@show");
-        // Route::put("/{id}", "UserController@update");
-        // Route::delete("/{user}", "UserController@delete");
+        Route::post("/store", "UserController@store");
+        Route::get("/{id}", "UserController@show");
+        Route::put("/{id}", "UserController@update");
+        Route::delete("/{id}", "UserController@delete");
     });
 
 }); 
