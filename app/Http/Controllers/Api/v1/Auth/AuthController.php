@@ -4,49 +4,22 @@ namespace App\Http\Controllers\Api\v1\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Validator;
+use Exception;
 
 class AuthController extends Controller
 {
-    /**
-     * Registro de usuario
-     */
-    public function signup(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'role_id' => 'required',
-            'password' => 'required|string|confirmed'
-        ]);
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_id' => $request->role_id,
-            'password' => bcrypt($request->password)
-            ]);
 
-        $user->save();
-
-            $user->company()->sync($request->company_id);
-            $user->permission()->sync($request->permissions);
-
-        $user_new = User::where('id', $user->id)->with('role','company','permission')->first();
-
-            return response()->json([
-                'data' => $user_new,
-                'message' => 'Registro Exitoso'
-        ], 201);
-    }
-
-    //Register
-    public function signup(Request $request)
+    //Start of session
+    public function login(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name'             => 'required|string',
-                'email'            => 'required|string|email|unique:users',
-                'password'         => 'required|string|min:6|confirmed',
-                'password_confirmation' => 'required|same:password',
+                'email'       => 'required|string|email',
+                'password'    => 'required|string|min:6',
+                'remember_me' => 'boolean',
             ]);
 
             if ($validator->fails()) {
@@ -55,54 +28,63 @@ class AuthController extends Controller
                 ], 422);
             }
 
-            $user           = new User();
-            $user->name     = $request->name;
-            $user->email    = $request->email;
-            $user->email_verified_at = now();
-            $user->password = Hash::make($request->password);
-            $user->save();
-
-            Auth::attempt([
-                'email' => $request->email,
-                'password' => $request->password
-            ]);
+            $credentials = ['email' => $request->email, 'password' => $request->password];
+            if (!Auth::attempt($credentials)) {
+                //El attempt método regresará true si la autenticación fue exitosa, de lo contrario, false será devuelto.
+                return response()->json(['error'=>'No autorizado'], 401);
+            }
 
             $user = Auth::user();
-            $user->role()->attach($request->role_id);
-
             $success = [
-                "token" => $user->createToken('sistemacontable')->accessToken,
-                "user"  => $user->where('id', $user->id)->with('role.permissions')->first(),// User::where('id',$user->id)->with('role.permissions')->get(),
+                "token" => $user->createToken('sistemaWiki')->accessToken,
+                "user"  => $user
             ];
-
             return response()->json([
-                "message" =>'Registrado con éxito',
-                "data" => $success,
+                "message" => 'Inicio de sesión con éxito',
+                'data' => $success,
             ], 200);
 
         } catch (Exception $e) {
             return response()->json([
-                'error'  => 'auth.signup.failed',
+                'error'  => 'auth.login.failed',
                 'message'=> $e->getMessage(),
             ], 505);
         }
     }
-    
-    //El attempt método regresará true si la autenticación fue exitosa, de lo contrario, false será devuelto.
 
-    public function authenticate(Request $request)
+    //user Information
+    // public function userInformation()
+    // {
+    //     try {
+    //         $user = Auth::user();
+    //         $success = [
+    //             "user"  => $user->where('id', $user->id)->with('role.permissions')->first(),
+    //         ];
+    //         return response()->json([
+    //             "message" => 'Informacion de usuario',
+    //             'data' => $success,
+    //         ], 200);
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'error'  => 'auth.login.failed',
+    //             'message'=> $e->getMessage(),
+    //         ], 505);
+    //     }
+    // }
+
+    //Session closure
+    public function logout(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->intended('dashboard');
+        try {
+            $request->user()->token()->revoke();
+            return response()->json([
+                "message" => 'Cierre de sesión con éxito',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'error'  => 'auth.logout.failed',
+                'message'=> $e->getMessage(),
+            ], 505);
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
     }
-}
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Validator;
 use Exception;
 
 class UserController extends Controller
@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            auth()->user()->id
+            //auth()->user()->id
             $data = User::where('id', '<>', Auth::id())->get();
             return response()->json([
                 'message' => 'Lista de usuarios',
@@ -83,12 +83,12 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             return response()->json([
                 "message" =>'Detalles de usuario',
-                "data" => $data,
+                "data" => $data
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'error'  => 'users.show.failed',
-                'message'=> $e->getMessage(),
+                'message'=> $e->getMessage()
             ], 505);
         }
     }
@@ -139,7 +139,7 @@ class UserController extends Controller
     {
         try {
             if($id == Auth::id()){
-                throw new Exception('Usuario no encontrado', 505);
+                throw new Exception('Usuario no encontrado', 404);
             }
             $data = User::findOrFail($id);
             $data->delete();
