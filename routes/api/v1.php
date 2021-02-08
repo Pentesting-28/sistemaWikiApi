@@ -27,13 +27,13 @@ Route::name("api.v1")->group(function () {
 	});
     
     Route::middleware(["auth:api"])->group(function () {
-        // User
-        Route::prefix("users")->group(function () {
-            Route::get("/", "UserController@index");
-            Route::post("/store", "UserController@store");
-            Route::get("/{id}", "UserController@show");
-            Route::put("/{id}", "UserController@update");
-            Route::delete("/{id}", "UserController@delete");
-        });
+        Route::apiResources([
+        'users'     => 'UserController',// User
+        'roles'     => 'RoleAndPemission\RoleController',// Roles
+        // 'pemission' => 'RoleAndPemission\PemissionController',// Pemission
+        // 'handbook'  => 'Handbook\HandbookController',// Handbook
+        // 'subtitle'  => 'Handbook\SubtitleController',// Subtitle
+        // 'image'     => 'Handbook\ImageController'// Image
+        ]);
     });
 });
