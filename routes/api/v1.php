@@ -34,7 +34,6 @@ Route::name("api.v1")->group(function () {
         // 'handbook'  => 'Handbook\HandbookController',// Handbook
         // 'subtitle'  => 'Handbook\SubtitleController',// Subtitle
         // 'image'     => 'Handbook\ImageController'// Image
-        ]);
-        
+        ]); 
     });
 });

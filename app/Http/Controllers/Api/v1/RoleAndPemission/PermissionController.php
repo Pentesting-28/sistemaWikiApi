@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v1\RoleAndPemission;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RolesAndPermissions\Permission;
-use Validator;
 use Exception;
 
 class PermissionController extends Controller
@@ -20,7 +19,7 @@ class PermissionController extends Controller
         try {
             $permission = Permission::all();
             return response()->json([
-                'message' => 'Lista de permisos'
+                'message' => 'Lista de permisos',
                 'data' => $permission
             ], 200);
         } catch (Exception $e) {

@@ -28,7 +28,7 @@ class UserController extends Controller
             ],200);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'users.index.failed',
+                'error' => 'UserController.index.failed',
                 'message'=> $e->getMessage(),
             ],500);
         }
@@ -62,7 +62,7 @@ class UserController extends Controller
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                'error'    => 'user.store.failed',
+                'error'    => 'UserController.store.failed',
                 'message'  => $e->getMessage()
             ], 505);
         }
@@ -87,7 +87,7 @@ class UserController extends Controller
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                'error'  => 'users.show.failed',
+                'error'  => 'UserController.show.failed',
                 'message'=> $e->getMessage()
             ], 505);
         }
@@ -123,7 +123,7 @@ class UserController extends Controller
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                'error'    => 'user.update.failed',
+                'error'    => 'UserController.update.failed',
                 'message'  => $e->getMessage()
             ], 505);
         }
@@ -149,7 +149,7 @@ class UserController extends Controller
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                'error'   => 'user.destroy.failed',
+                'error'   => 'UserController.destroy.failed',
                 'message' => $e->getMessage()
             ], 505);
         }

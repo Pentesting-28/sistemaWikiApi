@@ -19,14 +19,14 @@ class RoleController extends Controller
     public function index()
     {
         try {
-            $data = Role::with('permissions')->get();
+            $roles = Role::with('permissions')->get();
             return response()->json([
                 'message' => 'Lista de roles',
-                'data' => $data  
+                'data' => $roles  
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'error'  => 'role.index.failed',
+                'error'  => 'RoleController.index.failed',
                 'message'=> $e->getMessage(),
             ], 505);
         }
