@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Validator;
 use Exception;
 
@@ -19,7 +20,7 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'email'       => 'required|string|email',
                 'password'    => 'required|string|min:6',
-                'remember_me' => 'boolean',
+                'remember_me' => 'boolean'
             ]);
 
             if ($validator->fails()) {
@@ -46,7 +47,7 @@ class AuthController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error'  => 'auth.login.failed',
+                'error'  => 'AuthController.login.failed',
                 'message'=> $e->getMessage(),
             ], 505);
         }
@@ -82,7 +83,7 @@ class AuthController extends Controller
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                'error'  => 'auth.logout.failed',
+                'error'  => 'AuthController.logout.failed',
                 'message'=> $e->getMessage(),
             ], 505);
         }

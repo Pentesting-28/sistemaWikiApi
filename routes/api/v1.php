@@ -22,18 +22,19 @@ Route::name("api.v1")->group(function () {
 
 	// Authentication
 	Route::prefix("auth")->namespace("Auth")->group(function () {
-		Route::post('login', 'AuthController@login');
-		Route::post('logout', 'AuthController@logout')->middleware(["auth:api"]);
+		Route::post('login', 'AuthController@login');//login
+		Route::post('logout', 'AuthController@logout')->middleware(["auth:api"]);//logout
 	});
     
     Route::middleware(["auth:api"])->group(function () {
         Route::apiResources([
         'users'     => 'UserController',// User
         'roles'     => 'RoleAndPemission\RoleController',// Roles
-        // 'pemission' => 'RoleAndPemission\PemissionController',// Pemission
+        'permission' => 'RoleAndPemission\PermissionController',// Pemission
         // 'handbook'  => 'Handbook\HandbookController',// Handbook
         // 'subtitle'  => 'Handbook\SubtitleController',// Subtitle
         // 'image'     => 'Handbook\ImageController'// Image
         ]);
+        
     });
 });
