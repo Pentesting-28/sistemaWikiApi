@@ -25,19 +25,6 @@ class UserSeeder extends Seeder
             Role::truncate();
         DB::statement("SET foreign_key_checks=1");
 
-        /*UserAdmin*/
-        $userAdmin = User::where('email','admin@cantv.com.ve')->first();
-
-        if($userAdmin){$userAdmin->delete();}
-
-        $userAdmin = User::create([
-	        'name' => 'admin',
-	        'email' => 'admin@cantv.com.ve',
-            'email_verified_at' => now(),
-	        'password' => Hash::make('123456')
-        ]);
-
-
         /*UserRoot*/
         $userRoot = User::where('email','root@cantv.com.ve')->first();
 
@@ -47,12 +34,23 @@ class UserSeeder extends Seeder
 	        'name' => 'root',
 	        'email' => 'root@cantv.com.ve',
             'email_verified_at' => now(),
-	        'password' => Hash::make('123456')
+	        'password' => Hash::make('secret')
         ]);
 
-        /////////////////////////////
-        ///////      Rol     ///////
-        ///////////////////////////
+        /*UserAdmin*/
+        $userAdmin = User::where('email','admin@cantv.com.ve')->first();
+
+        if($userAdmin){$userAdmin->delete();}
+
+        $userAdmin = User::create([
+	        'name' => 'admin',
+	        'email' => 'admin@cantv.com.ve',
+            'email_verified_at' => now(),
+	        'password' => Hash::make('secret')
+        ]);
+
+        ////////////////////////////
+        ///////      Rol     //////
         ////////    Root   ///////
         /////////////////////////
         $rol_root = Role::create([
@@ -62,9 +60,8 @@ class UserSeeder extends Seeder
             'full-access' => 'yes'
         ]);
         
-        /////////////////////////////
-        ///////     Rol     ////////
-        ///////////////////////////
+        ////////////////////////////
+        ///////     Rol     ///////
         ////////   Admin   ///////
         /////////////////////////
         $rol_admin = Role::create([
@@ -74,9 +71,8 @@ class UserSeeder extends Seeder
             'full-access' => null
         ]);
         
-        /////////////////////////////
-        ///////      Rol     ///////
-        ///////////////////////////
+        ////////////////////////////
+        ///////      Rol     //////
         ////////    User   ///////
         /////////////////////////
         $rol_user = Role::create([
@@ -86,9 +82,8 @@ class UserSeeder extends Seeder
             'full-access' => null
         ]);
 
-        /////////////////////////////
-        ///////      Rol     ///////
-        ///////////////////////////
+        ////////////////////////////
+        ///////      Rol     //////
         ////////    Role   ///////
         /////////////////////////
         $rol_role = Role::create([
@@ -100,7 +95,6 @@ class UserSeeder extends Seeder
 
         /////////////////////////////
         ///////      Rol     ///////
-        ///////////////////////////
         ////////  Handbook ///////
         /////////////////////////
         $rol_handbook = Role::create([
@@ -110,9 +104,8 @@ class UserSeeder extends Seeder
             'full-access' => null
         ]);     
 
-        /////////////////////////////
-        ///////  Permissions ///////
-        ///////////////////////////
+        ////////////////////////////
+        ///////  Permissions //////
         ////////    User   ///////
         /////////////////////////
         $permission = Permission::create([//1
@@ -141,9 +134,8 @@ class UserSeeder extends Seeder
             'description' => 'Podría eliminar cualquier usuario del sistema'
         ]);
 
-        /////////////////////////////
-        ///////  Permissions ///////
-        ///////////////////////////
+        ////////////////////////////
+        ///////  Permissions //////
         ////////    Role   ///////
         /////////////////////////
         $permission = Permission::create([//6
@@ -172,9 +164,8 @@ class UserSeeder extends Seeder
             'description' => 'Podría eliminar cualquier rol del sistema'
         ]);
 
-        /////////////////////////////
-        ///////  Permissions ///////
-        ///////////////////////////
+        ////////////////////////////
+        ///////  Permissions //////
         ////////  Handbook ///////
         /////////////////////////
         $permission = Permission::create([//11
@@ -206,11 +197,12 @@ class UserSeeder extends Seeder
         ////////////////////////////////////
         ////// Assigning Permissions //////
         //////////////////////////////////
-
         $rol_user->permissions()->sync([1,2,3,4,5]);//Rol User And Permission
         $rol_role->permissions()->sync([6,7,8,9,10]);//Rol Role And Permission
         $rol_handbook->permissions()->sync([11,12,13,14,15]);//Rol Handbook And Permission
         $rol_admin->permissions()->sync([1,2,3,4,5,11,12,13,14,15]);//Rol Admin And Permission
         $rol_root->permissions()->sync([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);//Rol Root And Permission
+        $userRoot->roles()->sync($rol_root);
+        $userAdmin->roles()->sync($rol_admin);
     }
 }
