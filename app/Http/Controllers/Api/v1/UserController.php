@@ -20,17 +20,16 @@ class UserController extends Controller
     public function index()
     {
         try {
-            //auth()->user()->id
-            $data = User::where('id', '<>', Auth::id())->get();
+            $user = User::where('id', '<>', auth()->user()->id)->get();
             return response()->json([
                 'message' => 'Lista de usuarios',
-                'data'    => $data
-            ],200);
+                'data'    => $user
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'error' => 'UserController.index.failed',
                 'message'=> $e->getMessage(),
-            ],500);
+            ], 505);
         }
     }
 
@@ -47,18 +46,21 @@ class UserController extends Controller
                 'name'     => 'required|string|max:255',
                 'email'    => 'required|string|email|unique:users',
                 'password' => 'required|string|min:6|confirmed',
-                'password_confirmation' => 'required|same:password'
+                'password_confirmation' => 'required|same:password',
+                'role_id'  => 'integer|exists:roles,id'
             ]);
             if ($validator->fails()) {
-                return response()->json([
-                    'error'=>$validator->errors()
-                ], 422);
+                return response()->json(['error' => $validator->errors()], 422);
             }
             $request['password'] = Hash::make($request->password);
-            $data = User::create($request->all());
+            $user = User::create($request->all());
+            if ($request->has('role_id')) {
+                $user->roles()->sync($request->get('role_id'));
+            }
+            $user_rol = User::whereId($user->id)->with('roles')->first();
             return response()->json([
                 'message' => 'Usuario creado con éxito',
-                'data'    => $data
+                'data'    => $user_rol
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -77,13 +79,13 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            if($id == Auth::id()){
+            if($id == auth()->user()->id){
                 throw new Exception('Usuario no encontrado', 505);
             }
-            $data = User::findOrFail($id);
+            $user_rol = User::with('roles')->findOrFail($id);
             return response()->json([
                 "message" =>'Detalles de usuario',
-                "data" => $data
+                "data" => $user_rol
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -103,23 +105,26 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            if($id == Auth::id()){
+            if($id == auth()->user()->id){
                 throw new Exception('Usuario no encontrado', 505);
             }
             $validator = Validator::make($request->all(), [
-                'name'  => 'required|string|max:255',
-                'email' => "required|string|email|max:255|unique:users,email,$id"
+                'name'    => 'required|string|max:255',
+                'email'   => "required|string|email|max:255|unique:users,email,$id",
+                'role_id' => 'integer|exists:roles,id'
             ]);
             if ($validator->fails()) {
-                return response()->json([
-                    'error'=>$validator->errors()
-                ], 422);
+                return response()->json(['error' => $validator->errors()], 422);
             }
-            $data = User::findOrFail($id);
-            $data->update($request->all());
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+            if ($request->has('role_id')) {
+                $user->roles()->sync($request->get('role_id'));
+            }
+            $user_rol = User::whereId($user->id)->with('roles')->first();
             return response()->json([
                 'message' => 'Usuario actualizado con éxito',
-                'data'    => $data
+                'data'    => $user_rol
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -138,7 +143,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            if($id == Auth::id()){
+            if($id == auth()->user()->id){
                 throw new Exception('Usuario no encontrado', 404);
             }
             $data = User::findOrFail($id);
