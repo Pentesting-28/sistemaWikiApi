@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function roles(){
         return $this->belongsToMany('App\Models\RolesAndPermissions\Role')->withTimestamps();
     }
+
+    public function handbooks(){
+        return $this->hasMany('App\Models\Handbook\Handbook');
+    }
 }

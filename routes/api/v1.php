@@ -28,12 +28,12 @@ Route::name("api.v1")->group(function () {
     
     Route::middleware(["auth:api"])->group(function () {
         Route::apiResources([
-        'users'     => 'UserController',// User
-        'roles'     => 'RoleAndPemission\RoleController',// Roles
-        'permission' => 'RoleAndPemission\PermissionController',// Pemission
-        // 'handbook'  => 'Handbook\HandbookController',// Handbook
-        // 'subtitle'  => 'Handbook\SubtitleController',// Subtitle
-        // 'image'     => 'Handbook\ImageController'// Image
+        'users'       => 'UserController',// User
+        'roles'       => 'RoleAndPemission\RoleController',// Roles
+        'permissions' => 'RoleAndPemission\PermissionController',// Pemission
+        'handbooks'   => 'Handbook\HandbookController',// Handbook
+        'subtitle'    => 'Handbook\SubtitleController',// Subtitle
+        'image'       => 'Handbook\ImageController'// Image
         ]); 
     });
 });
