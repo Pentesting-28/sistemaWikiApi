@@ -19,7 +19,7 @@ class Subtitle extends Model
     	return $this->belongsTo('App\Models\Handbook\Handbook');
     }
 
-    public function imagen(){
-        return $this->hasOne('App\Models\Handbook\Imagen');
+    public function image(){
+        return $this->hasOne('App\Models\Handbook\Image');
     }
 }

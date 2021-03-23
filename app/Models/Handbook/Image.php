@@ -10,7 +10,8 @@ class Image extends Model
     use HasFactory;
 
     protected $fillable = [
-    	'url'
+    	'url',
+    	'subtitle_id'
     ];
 
     public function subtitles(){
