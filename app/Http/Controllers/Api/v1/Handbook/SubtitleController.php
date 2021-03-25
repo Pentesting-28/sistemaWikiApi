@@ -17,7 +17,7 @@ class SubtitleController extends Controller
             $validator = Validator::make($request->all(), [
                 'name'        => 'required|string|min:5|max:255',
                 'description' => 'required|string|min:5|max:600',
-                'handbook_id' => 'required|integer|exists:subtitles,id'
+                'handbook_id' => 'required|integer|exists:handbooks,id'
             ]);
             if ($validator->fails()) {
                return response()->json(['error' => $validator->errors()], 422);
