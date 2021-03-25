@@ -14,7 +14,7 @@ class Image extends Model
     	'subtitle_id'
     ];
 
-    public function subtitles(){
+    public function subtitle(){
     	return $this->belongsTo('App\Models\Handbook\Subtitle');
     }
 }
