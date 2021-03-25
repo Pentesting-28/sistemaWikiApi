@@ -32,12 +32,12 @@ Route::name("api.v1")->group(function () {
         'roles'       => 'RoleAndPemission\RoleController',// Roles
         'permissions' => 'RoleAndPemission\PermissionController',// Pemission
         'handbooks'   => 'Handbook\HandbookController',// Handbook
-        'subtitles'    => 'Handbook\SubtitleController',// Subtitle
-        'image'       => 'Handbook\ImageController'// Image
+        'subtitles'   => 'Handbook\SubtitleController',// Subtitle
         ]); 
-        Route::prefix("subtitles")->namespace("Handbook")->group(function () {
-            Route::post('/save_caption_image', 'Handbook\ImageController@saveCaptionImage');//save caption with image
-            Route::delete('/delete_caption_image', 'Handbook\ImageController@destroyCaptionImage');//delete caption with image
+        Route::prefix("images")->namespace("Handbook")->group(function () {// Image
+            Route::post('/', 'ImageController@store');// store
+            Route::post("/{id}", 'ImageController@update');// update
+            Route::delete('/{id}', 'ImageController@destroy');// destroy
         });
     });
 });
