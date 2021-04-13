@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Api\v1\Handbook;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Handbook\{Handbook,Subtitle};
+use Illuminate\Contracts\Auth\Access\Gate;
 use Validator;
 use Exception;
 use DB;
 
 class HandbookController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('can:handbook.index')->only('index');
+    //     // $this->authorize('access','handbook.index');
+    //     // $this->middleware('can:rol,destroy')->only('destroy');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -19,6 +26,7 @@ class HandbookController extends Controller
     public function index()
     {
         try {
+            $this->authorize('access','handboñk.index');
             $handbooks = Handbook::with('user')->first();
             return response()->json([
                 'message' => 'Lista de manuales',

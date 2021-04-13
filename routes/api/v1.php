@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Models\RolesAndPermissions\Role;
+use \App\Models\RolesAndPermissions\Permission;
+use \App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +42,11 @@ Route::name("api.v1")->group(function () {
             Route::post('/', 'ImageController@store');// store
             Route::post("/{id}", 'ImageController@update');// update
             Route::delete('/{id}', 'ImageController@destroy');// destroy
+        });
+        Route::get('/test', function () {
+            $user = User::find(13);
+            Gate::authorize('access','handbook.index');
+            return $user;
         });
     });
 });
